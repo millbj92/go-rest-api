@@ -1,6 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+
+	transportHttp "github.com/millbj92/go-rest-api/internal/transport/http"
+)
 
 //Application configurations
 type App struct {
@@ -10,6 +15,13 @@ type App struct {
 func (app *App) Run() error {
 	fmt.Println("Setting up Applicaiton")
 
+	handler := transportHttp.NewHandler()
+	handler.SetupRoutes()
+
+	if err := http.ListenAndServe(":8080", handler.Router); err != nil {
+		fmt.Println("Failedto set up server")
+		return err
+	}
 	return nil
 }
 
